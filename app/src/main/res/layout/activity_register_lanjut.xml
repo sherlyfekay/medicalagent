@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@mipmap/bg_register"
+    android:padding="30dp"
+    tools:context=".fitur.register.RegisterLanjutActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hai Merina,"
+        android:textColor="@color/black"
+        android:fontFamily="sans-serif"
+        android:layout_marginTop="20dp"
+        android:textSize="28sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bidang tenaga kesehatan apa yang Anda tekuni ?"
+        android:textColor="@color/black"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Jenis tenaga kesehatan"
+        android:textSize="14sp"
+        android:textColor="@color/colorPrimary"/>
+
+    <Spinner
+        android:id="@+id/spRole"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+    </Spinner>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Sertifikat dan Foto Formal"
+        android:textSize="14sp"
+        android:textColor="@color/colorPrimary" />
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:id="@+id/ivUploadSer"
+            android:layout_width="300dp"
+            android:layout_height="210dp"
+            android:layout_gravity="center"
+            android:src="@drawable/upload_sertifikat"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="75dp"/>
+
+        <ImageView
+            android:layout_width="90dp"
+            android:layout_height="120dp"
+            android:src="@drawable/upload_foto"
+            android:scaleType="centerCrop"
+            android:translationZ="1dp"
+            app:layout_anchor="@id/ivUploadSer"
+            app:layout_anchorGravity="right|bottom"/>
+    </android.support.design.widget.CoordinatorLayout>
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:text="SELESAI"
+        android:layout_gravity="right"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iconback"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_arrow_back_white_24dp"
+            android:layout_alignParentBottom="true"/>
+
+        <TextView
+            android:id="@+id/tvKembali"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kembali"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/iconback"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:layout_alignParentBottom="true"
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>
