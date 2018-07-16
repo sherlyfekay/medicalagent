@@ -28,6 +28,7 @@ public class HistoriFragment extends Fragment {
 
     private RecyclerView rvDaftarHistori;
     private DaftarHistoriAdapter historiAdapter;
+    private String id_agent, token;
 
     public HistoriFragment() {
         // Required empty public constructor
@@ -41,9 +42,17 @@ public class HistoriFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_histori, container, false);
 
         final SharedPreferences pref = getActivity().getSharedPreferences("medigent2", MODE_PRIVATE);
-        final String id_agent = pref.getString("id_agent", "null");
-        final String token = pref.getString("token", "null");
+        id_agent = pref.getString("id_agent", "null");
+        token = pref.getString("token", "null");
         rvDaftarHistori = (RecyclerView) view.findViewById(R.id.rvDaftarHistori);
+
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         ApiService.service_get.getHistoryByAgent("Bearer "+token, id_agent).enqueue(new Callback<HistoriModel>() {
             @Override
@@ -67,7 +76,5 @@ public class HistoriFragment extends Fragment {
 
             }
         });
-        return view;
     }
-
 }

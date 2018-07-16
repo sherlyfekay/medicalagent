@@ -2,7 +2,8 @@ package com.example.sherly.medicalagent.model.agent;
 
 public class DataAgentModel {
     String _id, nama_lengkap, email, password, telepon, jk, tgl_lahir, judul, alamat_lengkap, tambahan, spesialis, sertifikat, foto, id_role;
-    Double lat, lng, rating;
+    Double lat, lng;
+    Float rating;
 
     public String get_id() {
         return _id;
@@ -68,7 +69,7 @@ public class DataAgentModel {
         return lng;
     }
 
-    public Double getRating() {
+    public Float getRating() {
         return rating;
     }
 }

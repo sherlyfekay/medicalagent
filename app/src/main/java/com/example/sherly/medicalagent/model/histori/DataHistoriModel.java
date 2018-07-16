@@ -1,7 +1,8 @@
 package com.example.sherly.medicalagent.model.histori;
 
 public class DataHistoriModel {
-    String _id, created_at, rating, jenis, nama_pasien, alamat_pasien;
+    String _id, created_at, rating, jenis, nama_pasien, alamat_lengkap;
+    Integer status;
 
     public String get_id() {
         return _id;
@@ -23,7 +24,11 @@ public class DataHistoriModel {
         return nama_pasien;
     }
 
-    public String getAlamat_pasien() {
-        return alamat_pasien;
+    public String getAlamat_lengkap() {
+        return alamat_lengkap;
+    }
+
+    public Integer getStatus() {
+        return status;
     }
 }

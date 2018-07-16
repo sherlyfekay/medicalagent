@@ -15,6 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sherly.medicalagent.model.agent.DataAgentModel;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.example.sherly.medicalagent.R;
 import com.example.sherly.medicalagent.fragment.beranda.DaftarOrderAdapter;
 import com.example.sherly.medicalagent.model.agent.AgentModel;
@@ -51,6 +54,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
     DaftarOrderAdapter orderAdapter;
     RecyclerView rvDaftarOrder;
     ArrayList<DataOrderModel> dataOrder;
+    String token, id_agent, alamat;
+    Double agentLat, agentLng;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -64,7 +69,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
 
         final SharedPreferences pref = getActivity().getSharedPreferences("medigent2", MODE_PRIVATE);
-        final String token = pref.getString("token", "null");
+        token = pref.getString("token", "null");
+        id_agent = pref.getString("id_agent", null);
 
         layoutBottomSheet = (LinearLayout) view.findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
@@ -75,7 +81,26 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
         ivPanah1.setBackgroundResource(R.drawable.ic_up);
         ivPanah2.setBackgroundResource(R.drawable.ic_up);
 
-        Toast.makeText(getActivity(), "Bisa", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getActivity(), "Bisa", Toast.LENGTH_LONG).show();
+
+        ApiService.service_get.getDetailAgent("Bearer "+token, id_agent).enqueue(new Callback<DataAgentModel>() {
+            @Override
+            public void onResponse(Call<DataAgentModel> call, Response<DataAgentModel> response) {
+                if(response.isSuccessful()) {
+                    agentLat = response.body().getLat();
+                    agentLng = response.body().getLng();
+                    alamat = response.body().getAlamat_lengkap();
+                }
+                else {
+                    Toast.makeText(getActivity(), "Terjadi kesalahan", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DataAgentModel> call, Throwable t) {
+
+            }
+        });
 
         ApiService.service_get.getOrders("Bearer "+token).enqueue(new Callback<OrderModel>() {
             @Override
@@ -90,8 +115,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
                     orderAdapter.notifyDataSetChanged();
 
                     dataOrder = response.body().getOrders();
-                    Toast.makeText(getActivity(), ""+dataOrder, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getActivity(), ""+response.body().getCount(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), ""+dataOrder, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), ""+response.body().getCount(), Toast.LENGTH_SHORT).show();
 
                     createMarker(dataOrder, response.body().getCount());
                 }
@@ -146,19 +171,54 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
     public void createMarker(ArrayList<DataOrderModel> dataOrder, int count) {
         mGoogleMap.clear();
 
+        mGoogleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(agentLat, agentLng))
+                .title("Lokasi saya")
+                .snippet(alamat)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
         ArrayList<LatLng> latLngs = new ArrayList<>();
         Double jarak;
-        for(int i=0; i<count; i++) {
-            latLngs.add(new LatLng(dataOrder.get(i).getLat(), dataOrder.get(i).getLng()));
+//        double yuhu[];
+//        ArrayList<Double> dekat = new ArrayList<>();
+        Double dekat[] = new Double[count];
+        double nearest = 0, lowest= Double.MAX_VALUE;
 
-//            jarak = distance(dataOrder.get(i).getLat(), dataOrder.get(i).getLng(), dataOrder.get(i+1).getLat(), dataOrder.get(i+1).getLng());
-//            Toast.makeText(getActivity(), ""+jarak, Toast.LENGTH_SHORT).show();
-            mGoogleMap.addMarker(new MarkerOptions().position(latLngs.get(i)).title(dataOrder.get(i).getNama_pasien()).snippet(dataOrder.get(i).getAlamat()));
+        for(int i=0; i<count; i++) {
+
+            jarak = distance(agentLat, agentLng, dataOrder.get(i).getLat(), dataOrder.get(i).getLng());
+            dekat[i] = jarak;
+
+//            if(jarak < lowest) {
+//                //nearest = jarak;
+//                //latLngs.add(new LatLng(dataOrder.get(i).getLat(), dataOrder.get(i).getLng()));
+//                lowest = jarak;
+//                Toast.makeText(getActivity(), ""+jarak, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), ""+latLngs.get(i), Toast.LENGTH_SHORT).show();
+//            }
+
+            mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(dataOrder.get(i).getLat(), dataOrder.get(i).getLng())).title(dataOrder.get(i).getNama_pasien()).snippet(dataOrder.get(i).getAlamat()));
+        }
+
+        for(int i=0; i<dekat.length; i++) {
+            for(int j=0; j<dekat.length; j++) {
+                if(dekat[i] < dekat[j]) {
+                    Double tampung = dekat[i];
+                    dekat[i] = dekat[j];
+                    dekat[j] = tampung;
+
+                }
+            }
+        }
+
+        for(int i=0; i<dekat.length; i++) {
+            Toast.makeText(getActivity(), ""+dekat[i], Toast.LENGTH_SHORT).show();
         }
     }
 
     public static double distance(double lat1, double lng1, double lat2, double lng2) {
         double earthRadius = 6371; //meters
+        //double earthRadius = 3958.75;
         double dLat = Math.toRadians(lat2-lat1);
         double dLng = Math.toRadians(lng2-lng1);
         double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -168,7 +228,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
         //double dist = earthRadius * c *1000;
         //dist = Math.pow(dist,2);
         double dist = earthRadius * c;
-        return dist;
+        //double meterConversion = 1609;
+        return dist ;
     }
 
     @Override

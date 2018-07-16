@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sherly.medicalagent.R;
@@ -38,16 +39,23 @@ public class DaftarHistoriAdapter extends RecyclerView.Adapter<DaftarHistoriAdap
         holder.tvTanggalHis.setText(dataHistori.get(i).getCreated_at());
         holder.tvNamaPasien.setText(dataHistori.get(i).getNama_pasien());
         holder.tvJenis.setText(dataHistori.get(i).getJenis());
-        holder.tvAlamatPasien.setText(dataHistori.get(i).getAlamat_pasien());
+        holder.tvAlamatPasien.setText(dataHistori.get(i).getAlamat_lengkap());
 
-//        holder.cvDaftarHis.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(activity, DetailHistoryActivity.class);
-//                intent.putExtra("id_orderoffer", detailHistoryModel.get_id());
-//                activity.startActivity(intent);
-//            }
-//        });
+        if(dataHistori.get(i).getStatus() == 2) {
+            holder.ivIcon.setImageResource(R.drawable.ic_repeat);
+            holder.tvStatus.setText("Dalam Proses");
+            holder.tvStatus.setTextColor(activity.getResources().getColor(R.color.kuning));
+        }
+
+        holder.cvDaftarHis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(activity, DetailHistoriActivity.class);
+                intent.putExtra("id_orderoffer", detailHistoryModel.get_id());
+                intent.putExtra("status", detailHistoryModel.getStatus());
+                activity.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -57,8 +65,9 @@ public class DaftarHistoriAdapter extends RecyclerView.Adapter<DaftarHistoriAdap
 
     public class ItemRowHolder extends RecyclerView.ViewHolder {
 
-        protected TextView tvTanggalHis, tvJenis, tvNamaPasien, tvAlamatPasien;
-        //protected CardView cvDaftarHis;
+        protected TextView tvTanggalHis, tvJenis, tvNamaPasien, tvAlamatPasien, tvStatus;
+        protected CardView cvDaftarHis;
+        protected ImageView ivIcon;
 
         public ItemRowHolder(View view) {
             super(view);
@@ -66,7 +75,9 @@ public class DaftarHistoriAdapter extends RecyclerView.Adapter<DaftarHistoriAdap
             this.tvJenis = (TextView)view.findViewById(R.id.tvJenis);
             this.tvNamaPasien = (TextView) view.findViewById(R.id.tvNamaPasien);
             this.tvAlamatPasien = (TextView)view.findViewById(R.id.tvAlamatPasien);
-            //this.cvDaftarHis = (CardView) view.findViewById(R.id.cvDaftarHis);
+            this.cvDaftarHis = (CardView) view.findViewById(R.id.cvDaftarHis);
+            this.tvStatus = (TextView) view.findViewById(R.id.tvStatus);
+            this.ivIcon = (ImageView) view.findViewById(R.id.ivIcon);
         }
     }
 

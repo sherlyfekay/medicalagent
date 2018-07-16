@@ -1,14 +1,18 @@
 package com.example.sherly.medicalagent.service;
 
+import com.example.sherly.medicalagent.model.CreateModel;
 import com.example.sherly.medicalagent.model.UpdateModel;
 import com.example.sherly.medicalagent.model.agent.AgentModel;
 import com.example.sherly.medicalagent.model.agent.DataAgentModel;
+import com.example.sherly.medicalagent.model.histori.DetailHistoryModel;
 import com.example.sherly.medicalagent.model.histori.HistoriModel;
 import com.example.sherly.medicalagent.model.login.LoginModel;
 import com.example.sherly.medicalagent.model.login.PostLoginModel;
 import com.example.sherly.medicalagent.model.order.OrderModel;
 import com.example.sherly.medicalagent.model.penilaian.RatingModel;
 import com.example.sherly.medicalagent.model.role.RoleModel;
+import com.example.sherly.medicalagent.model.shift.DetailShiftModel;
+import com.example.sherly.medicalagent.model.shift.ShiftModel;
 
 import java.util.ArrayList;
 
@@ -57,6 +61,12 @@ public class ApiService {
         @GET("/ratings/category/{agentId}")
         Call<RatingModel> getRatingByAgent(@Header("Authorization") String token, @Path("agentId") String agentId);
 
+        @GET("/ordersoffers/{ooId}")
+        Call<DetailHistoryModel> getHistoryByOO (@Header("Authorization") String token, @Path("ooId") String ooId);
+
+        @GET("/shifts/category/{ooId}")
+        Call<ShiftModel> getShiftByOO (@Header("Authorization") String token, @Path("ooId") String ooId);
+
 
 //        @GET("/roles/{roleId}")
 //        Call<DataRole> getDetailRole(@Header("Authorization") String token, @Path("roleId") String roleId);
@@ -92,6 +102,9 @@ public class ApiService {
         @POST("/agents/login")
         Call<LoginModel> postLogin(@Body PostLoginModel body);
 
+        @POST("/shifts")
+        Call<CreateModel> postShift(@Header("Authorization") String token, @Body DetailShiftModel body);
+
 //        @POST("/users/signup")
 //        Call<RegisterModel> postSignup(@Body PostRegisterModel body);
 //
@@ -108,6 +121,9 @@ public class ApiService {
     public interface PatchService {
         @PATCH("/agents/{agentId}")
         Call<AgentModel> patchAgent(@Header("Authorization") String token, @Path("agentId") String agentId, @Body UpdateModel body);
+
+        @PATCH("/ordersoffers/{ooId}")
+        Call<CreateModel> patchOO(@Header("Authorization") String token, @Path("ooId") String ooId, @Body ArrayList<UpdateModel> body);
 
         @PATCH("/agents/update/{agentId}")
         Call<AgentModel> patchAddressAgent(@Header("Authorization") String token, @Path("agentId") String agentId, @Body ArrayList<UpdateModel> body);

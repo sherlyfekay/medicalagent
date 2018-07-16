@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:id="@+id/cvdaftarHis"
+    android:id="@+id/cvDaftarHis"
     app:cardCornerRadius="5dp"
     app:cardUseCompatPadding="true">
 
@@ -27,6 +27,7 @@
                 android:layout_weight="1"/>
 
             <ImageView
+                android:id="@+id/ivIcon"
                 android:layout_width="17dp"
                 android:layout_height="17dp"
                 android:src="@drawable/ic_check_circle_black_24dp"/>
